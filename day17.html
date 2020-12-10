@@ -1,0 +1,47 @@
+
+<div id="app"></div>
+
+<script>
+var app = document.querySelector('#app');
+var apiKey = 'zqrqUXzs6Er1OaZjemNQwpuHOn7GfQTS';
+var topics = ['technology', 'automobiles', 'books', 'travel', 'movies'];
+var articleCount = 5;
+var render = function (articles, topic) {
+    app.innerHTML += '<h2>' + topic + '</h2>' + articles.map(function (article) {
+        var html =
+            '<article>' +
+            '<h3><a href="' + article.url + '">' + article.title + '</a></h3>' +
+            '<p>' + article.byline + '</p>' +
+            '<p>' + article.abstract + '</p>' +
+            '</article>';
+        return html;
+    }).join('');
+};
+var getArticles = function (topic) {
+    fetch('https://api.nytimes.com/svc/topstories/v2/' + topic + '.json?api-key=' + apiKey).then(function (response) {
+        if (response.ok) {
+            return response.json();
+        } else {
+            return Promise.reject(response);
+        }
+    }).then(function (data) {
+
+        var firstFew = getFirstFew(data.results);
+
+        render(firstFew, topic);
+
+    }).catch(function (error) {
+        console.log('Something went wrong:', error);
+    });
+};
+
+topics.forEach(function (topic) {
+    getArticles(topic);
+});
+var getFirstFew = function (articles) {
+    return articles.slice(0, articleCount);
+};
+
+
+
+</script>

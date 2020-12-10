@@ -1,0 +1,40 @@
+<blockquote id="quote" aria-live="polite">
+<em>Getting a fresh quote...</em>
+</blockquote>
+
+<p>
+    <button id="get-quote">More Ron</button>
+</p>
+
+<script>
+    var quote = document.querySelector('#quote');
+    var btn = document.querySelector('#get-quote');
+    var quotes = [];
+    var getQuote = function () {
+        fetch('http://ron-swanson-quotes.herokuapp.com/v2/quotes').then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject(response);
+            }
+        }).then(function (data) {
+
+            if (quotes.indexOf(data[0]) > -1) {
+                getQuote();
+                return;
+            }
+
+            quote.textContent = data[0];
+            quotes.push(data[0]);
+
+            if (quotes.length > 50) {
+                quotes = [];
+            }
+
+        }).catch(function (error) {
+            quote.textContent = '[Something went wrong, sorry!] I have a joke for you... The government in this town is excellent, and uses your tax dollars efficiently.';
+        });
+    };
+    btn.addEventListener('click', getQuote, false);
+
+</script>

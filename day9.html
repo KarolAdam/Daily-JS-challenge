@@ -1,0 +1,15 @@
+<label for="text">Enter your text below.</label>
+<textarea id="text"></textarea>
+
+<p id="count" aria-live="assertive">You've written <strong>0 words</strong> and <strong>0 characters</strong>.</p>
+<script>
+    text.addEventListener('input', function () {
+
+        var words = text.value.split(/[\n\r\s]+/g).filter(function (word) {
+            return word.length > 0;
+        });
+
+        count.textContent = 'You\'ve written ' + words.length + ' words and ' + text.value.length + ' characters.';
+
+    }, false);
+</script>
